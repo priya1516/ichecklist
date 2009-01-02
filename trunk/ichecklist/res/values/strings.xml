@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">iChecklist</string>
+    <string name="name">Name</string>
+    <string name="menu_add_checklist">Add Checklist</string>
+    <string name="menu_delete_checklist">Delete Checklist</string>
+    <string name="menu_add_item">Add Item</string>
+    <string name="menu_delete_item">Delete Item</string>
+    <string name="items">Items</string>
+    <string name="item">Item</string>
+    <string name="save">Save</string>
+</resources>
