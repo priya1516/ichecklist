@@ -1,0 +1,206 @@
+<!--
+  Description: The build file for iChecklist.
+  Usage:
+  - To generate distribution (default target)
+      ant dist
+  - To build
+      ant
+  - To run the unit tests
+      ant unit
+  - To clean
+      ant clean
+  - To backup locally
+      ant bkup
+  - To generate all reports
+      ant report
+-->
+<project name="iChecklist" default="dist" basedir=".">
+
+  <!-- Base/App properties -->
+  <property name="app" value="ichecklist"/>
+  <property name="bkup.root" value="/technobuff"/>
+  <property file="build.properties"/>
+
+  <!-- Global properties starts -->
+  <property name="src" value="src"/>
+  <property name="src.java" value="${src}/java"/>
+  <property name="src.test" value="${src}/test"/>
+  <property name="src.docs" value="${src}/docs"/>
+  <property name="build" value="build/java"/>
+  <property name="build.test" value="build/test"/>
+  <property name="lib" value="lib"/>
+  <property name="requirements" value="requirements"/>
+  <property name="dist" value="dist"/>
+  <property name="bkup.dir" value="${bkup.root}/projects/products/${app}"/>
+  <property name="report.dir" location="report"/>
+  <property name="coverage.report.dir" value="${report.dir}/coverage"/>
+  <property name="jfeature.report.dir" value="${report.dir}/jfeature"/>
+  <property name="unit.report.dir" value="${report.dir}/unit"/>
+  <property name="tmp" location="d:/tmp"/>
+  <property name="junit.results.dir" value="${tmp}/unit/${app}"/>
+  <property name="instrumentation.dir" value="${tmp}/instrumentation/${app}"/>
+  <property name="app.prefix" value="${app}"/>
+  <property name="target.jar" value="${dist}/${app}_${app.version}.jar"/>
+  <property name="target.zip" value="${dist}/${app}_${app.version}.zip"/>
+  <property name="packaging.dir" value="${tmp}/packaging/${app}"/>
+  <!-- Global properties ends -->
+
+  <!-- Global filesets/patternsets starts -->
+  <!-- Fileset for the classpath -->
+  <fileset id="cp" dir="${lib}">
+    <include name="**/*.jar"/>
+  </fileset>
+  <path id="coverage.classpath">
+    <fileset dir="${lib}/coverage">
+      <include name="**/*.jar"/>
+    </fileset>
+  </path>
+  <!-- Patternset for the files to be backed up -->
+  <patternset id="bkup.files.set">
+    <exclude name="build/**"/>
+    <exclude name=".settings/**"/>
+    <exclude name="data/**"/>
+    <exclude name="report/**"/>
+    <exclude name="**/CVS"/>
+    <exclude name="**/~*.doc"/>
+    <exclude name="**/*.tmp"/>
+    <exclude name="**/*.swp"/>
+    <exclude name="**/*.log"/>
+    <exclude name="**/*.dat"/>
+    <exclude name="**/*.out"/>
+    <exclude name="**/*.db"/>
+    <exclude name="**/*.em"/>
+    <exclude name="**/*.ec"/>
+  </patternset>
+  <!-- Fileset for common distribution files -->
+  <fileset id="common.dist.files.set" dir="${basedir}">
+    <include name="readme.txt"/>
+    <include name="release_notes.txt"/>
+  </fileset>
+  <fileset id="license.files.set" dir="${basedir}">
+    <include name="LICENSE"/>
+    <include name="3rdparty_licenses/**"/>
+  </fileset>
+  <!-- Fileset for help files -->
+  <fileset id="help.files.set" dir="${basedir}">
+  	<include name="api/**"/>
+  	<exclude name=".*"/>
+  </fileset>
+  <!-- Global filesets/patternsets ends -->
+
+  <!-- Description starts -->
+  <description>
+    The build file for iChecklist.
+  </description>
+  <!-- Description ends -->
+
+  <!-- Target: "init" starts -->
+  <target name="init" description="Initialize build process.">
+    <mkdir dir="${src.java}"/>
+    <mkdir dir="${src.test}"/>
+    <mkdir dir="${src.docs}"/>
+    <mkdir dir="${requirements}"/>
+    <mkdir dir="${build}"/>
+    <mkdir dir="${build.test}"/>
+    <mkdir dir="${lib}"/>
+    <mkdir dir="${dist}"/>
+    <mkdir dir="${bkup.dir}"/>
+    <mkdir dir="${jfeature.report.dir}"/>
+  </target>
+  <!-- Target: "init" ends -->
+
+  <!-- Target: "compile" starts -->
+  <target name="compile" depends="init" description="Compiles the sources.">
+    <javac srcdir="${src.java}" destdir="${build}" debug="on" deprecation="on">
+      <classpath>
+        <fileset refid="cp"/>
+      </classpath>
+    </javac>
+  </target>
+  <!-- Target: "compile" ends -->
+
+  <!-- Target: "dist" starts -->
+  <target name="dist" depends="compile" description="Generates the distribution.">
+    <!-- Initialize -->
+    <antcall target="preparePackaging"/>
+
+    <!-- Build application jar -->
+    <antcall target="jar"/>
+
+  	<!-- Prepare packaging content-->
+    <copy todir="${packaging.dir}">
+      <fileset refid="common.dist.files.set"/>
+      <fileset refid="license.files.set"/>
+    </copy>
+    <copy todir="${packaging.dir}/docs">
+      <fileset refid="help.files.set"/>
+    </copy>
+    <copy todir="${packaging.dir}" file="${target.jar}"/>
+    
+    <!-- Prepare distribution -->
+    <zip destfile="${target.zip}">
+      <zipfileset dir="${packaging.dir}" prefix="${app}"/>
+    </zip>
+
+    <!-- Clean up/restore -->
+    <antcall target="finishPackaging"/>
+  </target>
+  <!-- Target: "dist" ends -->
+
+  <!-- Target: "preparePackaging" starts -->
+  <target name="preparePackaging">
+    <!-- Prepare packaging directory -->
+    <delete dir="${packaging.dir}"/>
+    <mkdir dir="${packaging.dir}"/>
+    <mkdir dir="${packaging.dir}/docs"/>
+  </target>
+  <!-- Target: "preparePackaging" ends -->
+
+  <!-- Target: "jar" starts -->
+  <target name="jar">
+    <jar jarfile="${target.jar}">
+      <fileset dir="${build}">
+        <exclude name="**/*.properties"/>
+      </fileset>
+      <fileset dir="${src.java}">
+        <include name="**/*.properties"/>
+      </fileset>
+    </jar>
+  </target>
+  <!-- Target: "jar" ends -->
+
+  <!-- Target: "finishPackaging" starts -->
+  <target name="finishPackaging">
+    <!-- Clean-up/restore -->
+    <delete dir="${packaging.dir}"/>
+  	<delete file="${target.jar}"/>
+  </target>
+  <!-- Target: "finishPackaging" ends -->
+
+  <!-- Target: "bkup" starts -->
+  <target name="bkup" description="Backups the local directories.">
+     <copy todir="${bkup.dir}" includeEmptyDirs="true">
+       <fileset dir=".">
+         <patternset refid="bkup.files.set"/>
+       </fileset>
+     </copy>
+  </target>
+  <!-- Target: "bkup" ends -->
+
+  <!-- Target: "restore" starts -->
+  <target name="restore" depends="init" description="Restores the local directories.">
+     <copy todir="." includeEmptyDirs="true">
+       <fileset dir="${bkup.dir}"/>
+     </copy>
+  </target>
+  <!-- Target: "restore" ends -->
+
+  <!-- Target: "clean" starts -->
+  <target name="clean" description="Clean up.">
+    <delete dir="${build}"/>
+    <delete dir="${build.test}"/>
+    <delete dir="${target.jar}"/>
+  </target>
+  <!-- Target: "clean" ends -->
+
+</project>
