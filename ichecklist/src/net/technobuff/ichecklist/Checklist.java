@@ -67,7 +67,7 @@ public class Checklist extends ListActivity {
   protected void fillData() {
     Cursor checklistCursor = mDbHelper.fetchAllCheckLists();
     String[] from = {ChecklistDBAdapter.KEY_NAME};
-    int[] to = {R.id.text1};
+    int[] to = {R.id.checklist_name_text};
     SimpleCursorAdapter checklists;
     
     startManagingCursor(checklistCursor);
@@ -92,6 +92,15 @@ public class Checklist extends ListActivity {
       case INSERT_ID:
         createChecklist();
         retval = true;
+        break;
+      case DELETE_ID:
+        mDbHelper.deleteChecklist(getListView().getSelectedItemId());
+        fillData();
+        retval = true;
+        break;
+      default:
+        retval = super.onMenuItemSelected(featureId, item);
+        break;
     }
     
     return retval;

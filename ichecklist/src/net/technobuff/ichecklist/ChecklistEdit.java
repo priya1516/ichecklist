@@ -19,18 +19,20 @@
 package net.technobuff.ichecklist;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleCursorAdapter;
 
 /**
- * The checklist activity.
+ * The checklist edit activity.
  *
  * @author Nitin
  */
@@ -63,6 +65,12 @@ public class ChecklistEdit extends Activity {
   /** The save control. */
   protected Button mSaveControl;
 
+  /** The cancel control. */
+  protected Button mCancelControl;
+  
+  /** Whether the activity is cancelled. */
+  protected boolean isCancelled;
+
 
   /** Called when the activity is first created. */
   @Override
@@ -76,6 +84,10 @@ public class ChecklistEdit extends Activity {
     mNameControl = (EditText) findViewById(R.id.name);
     mItemsControl = (ListView) findViewById(R.id.items);
     mSaveControl = (Button) findViewById(R.id.save);
+    mCancelControl = (Button) findViewById(R.id.cancel);
+    mItemsControl.setEmptyView(findViewById(R.id.no_items)); // View to show when no items exist
+    // mItemsControl.addHeaderView(findViewById(R.id.is_done_header));
+    // mItemsControl.addHeaderView(findViewById(R.id.item_header));
 
     // Initialize data
     mListRowId = (savedInstanceState != null) ?
@@ -87,9 +99,35 @@ public class ChecklistEdit extends Activity {
     populateFields();
 
     // Listeners
+    mItemsControl.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+      public void onItemClick(AdapterView<?> l, View v, int position, long id) {
+        Intent intent = new Intent(getBaseContext(), ChecklistItemEdit.class);
+        intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
+        intent.putExtra(ChecklistDBAdapter.KEY_LIST_ID, mListRowId);
+        startActivityForResult(intent, ACTIVITY_EDIT);
+      }
+
+      public void onClick(View view) {
+        View v = view;
+      }
+    });
+    /*
+    mItemsControl.setOnClickListener(new AdapterView.OnClickListener() {
+      public void onClick(View view) {
+        View v = view;
+      }
+    });
+    */
     mSaveControl.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
         setResult(RESULT_OK);
+        finish();
+      }
+    });
+    mCancelControl.setOnClickListener(new View.OnClickListener() {
+      public void onClick(View view) {
+        setResult(RESULT_CANCELED);
+        isCancelled = true;
         finish();
       }
     });
@@ -102,15 +140,17 @@ public class ChecklistEdit extends Activity {
     if (mListRowId != null) {
       Cursor checklistCursor = mDbHelper.fetchChecklist(mListRowId);
       Cursor checklistItemsCursor = mDbHelper.fetchAllChecklistItems(mListRowId);
+      // String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
+      // int[] to = {R.id.is_done_text, R.id.item_text};
       String[] from = {ChecklistDBAdapter.KEY_ITEM};
-      int[] to = {R.id.text1};
+      int[] to = {R.id.item_text};
       SimpleCursorAdapter checklistItems;
 
       startManagingCursor(checklistCursor);
       mNameControl.setText(checklistCursor.getString(
           checklistCursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_NAME)));
       startManagingCursor(checklistItemsCursor);
-      checklistItems = new SimpleCursorAdapter(this, R.layout.checklist_items,
+      checklistItems = new SimpleCursorAdapter(this, R.layout.checklist_item_row,
           checklistItemsCursor, from, to);
       mItemsControl.setAdapter(checklistItems);
     }
@@ -129,11 +169,28 @@ public class ChecklistEdit extends Activity {
     boolean retval = false;
 
     switch(item.getItemId()) {
-    case INSERT_ID:
-      retval = true;
+      case INSERT_ID:
+        createChecklistItem();
+        retval = true;
+        break;
+      case DELETE_ID:
+        mDbHelper.deleteChecklist(mItemsControl.getSelectedItemId());
+        populateFields();
+        retval = true;
+        break;
+      default:
+        retval = super.onMenuItemSelected(featureId, item);
+        break;
     }
 
     return retval;
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, 
+      Intent intent) {
+    super.onActivityResult(requestCode, resultCode, intent);
+    populateFields();
   }
 
   @Override
@@ -145,13 +202,25 @@ public class ChecklistEdit extends Activity {
   @Override
   protected void onPause() {
     super.onPause();
-    saveState();
+    if (!isCancelled) {
+      saveState();
+    }
   }
 
   @Override
   protected void onResume() {
     super.onResume();
+    isCancelled = false;
     populateFields();
+  }
+
+  /**
+   * Creates a checklist item.
+   */
+  protected void createChecklistItem() {
+    Intent intent = new Intent(this, ChecklistItemEdit.class);
+    intent.putExtra(ChecklistDBAdapter.KEY_LIST_ID, mListRowId);
+    startActivityForResult(intent, ACTIVITY_CREATE);
   }
 
   /**
@@ -168,7 +237,7 @@ public class ChecklistEdit extends Activity {
       }
     }
     else {
-      //      mDbHelper.updateChecklist(mListRowId, name);
+      mDbHelper.updateChecklist(mListRowId, name);
     }
   }
 }

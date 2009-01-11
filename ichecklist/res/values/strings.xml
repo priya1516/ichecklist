@@ -1,12 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">iChecklist</string>
-    <string name="name">Name</string>
-    <string name="menu_add_checklist">Add Checklist</string>
-    <string name="menu_delete_checklist">Delete Checklist</string>
-    <string name="menu_add_item">Add Item</string>
-    <string name="menu_delete_item">Delete Item</string>
-    <string name="items">Items</string>
-    <string name="item">Item</string>
-    <string name="save">Save</string>
+  <!-- Labels -->
+  <string name="app_name">iChecklist</string>
+  <string name="name">Name</string>
+  <string name="menu_add_checklist">Add Checklist</string>
+  <string name="menu_delete_checklist">Delete Checklist</string>
+  <string name="menu_add_item">Add Item</string>
+  <string name="menu_delete_item">Delete Item</string>
+  <string name="items">Items</string>
+  <string name="item">Item</string>
+  <string name="is_done">Done?</string>
+  <string name="save">Save</string>
+  <string name="cancel">Cancel</string>
+  
+  <!-- Messages -->
+  <string name="no_checklists">No checklists!</string>
+  <string name="no_items">No items in the checklist!</string>
 </resources>
