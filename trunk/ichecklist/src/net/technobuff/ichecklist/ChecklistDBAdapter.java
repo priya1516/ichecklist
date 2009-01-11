@@ -42,6 +42,9 @@ public class ChecklistDBAdapter {
   /** The list id key. */
   public static final String KEY_LIST_ID = "list_id";
   
+  /** The isDone key. */
+  public static final String KEY_IS_DONE = "is_done";
+  
   /** The item key. */
   public static final String KEY_ITEM = "item";
   
@@ -63,12 +66,12 @@ public class ChecklistDBAdapter {
   /** The checklist table create query. */
   protected static final String CHECKLIST_TBL_CREATE_QRY =
     "create table checklist(_id integer primary key autoincrement,"
-    + "name not null);";
+    + "name text not null);";
   
   /** The checklist item table create query. */
   protected static final String CHECKLIST_ITEM_TBL_CREATE_QRY =
     "create table checklist_item(_id integer primary key autoincrement,"
-    + "list_id integer not null, item not null);";
+    + "list_id integer not null, is_done boolean, item text not null);";
 
   /** The context. */
   protected Context mCtx;
@@ -128,6 +131,7 @@ public class ChecklistDBAdapter {
   public long createCheckListItem(long listId, String item) {
     ContentValues values = new ContentValues();
     values.put(KEY_LIST_ID, listId);
+    values.put(KEY_IS_DONE, false);
     values.put(KEY_ITEM, item);
     return mDb.insert(CHECKLIST_ITEM_TBL, null, values);
   }
@@ -160,8 +164,52 @@ public class ChecklistDBAdapter {
    * @param listId The list id.
    */
   public Cursor fetchAllChecklistItems(long listId) {
-    return mDb.query(CHECKLIST_TBL, new String[] {KEY_ROWID, KEY_ITEM},
+    return mDb.query(CHECKLIST_ITEM_TBL, new String[] {KEY_ROWID, KEY_IS_DONE, KEY_ITEM},
         KEY_LIST_ID + "=" + listId, null, null, null, null);
+  }
+  
+  /**
+   * Retrieves the specified checklist item.
+   * 
+   * @param rowId The item row id.
+   */
+  public Cursor fetchChecklistItem(long rowId) {
+    Cursor cursor = mDb.query(true, CHECKLIST_ITEM_TBL, new String[] {KEY_ROWID, KEY_IS_DONE, KEY_ITEM},
+        KEY_ROWID + "=" + rowId, null, null, null, null, null);
+    if (cursor != null) {
+      cursor.moveToFirst();
+    }
+    return cursor;
+  }
+  
+  /**
+   * Updates the specified checklist.
+   * 
+   * @param rowId The row id of the checklist to update.
+   * @param name The checklist name.
+   * 
+   * @return Returns true if the update was successful. Otherwise, false.
+   */
+  public boolean updateChecklist(long rowId, String name) {
+    ContentValues values = new ContentValues();
+    values.put(KEY_NAME, name);
+    return mDb.update(CHECKLIST_TBL, values, KEY_ROWID + "=" + rowId, null) > 0;
+  }
+  
+  /**
+   * Updates the specified checklist item.
+   * 
+   * @param rowId The row id of the checklist item to update.
+   * @param item The checklist item.
+   * @param isDone Whether the checklist item is done.
+   * 
+   * @return Returns true if the update was successful. Otherwise, false.
+   */
+  public boolean updateChecklistItem(long rowId, String item, boolean isDone) {
+    ContentValues values = new ContentValues();
+    values.put(KEY_ITEM, item);
+    values.put(KEY_IS_DONE, isDone);
+    return mDb.update(CHECKLIST_ITEM_TBL, values, KEY_ROWID + "=" + rowId, null) > 0;
   }
   
   /**
@@ -177,16 +225,6 @@ public class ChecklistDBAdapter {
       status = mDb.delete(CHECKLIST_TBL, KEY_ROWID + "=" + rowId, null) > 0;
     }
     return status;
-  }
-  
-  /**
-   * Retrieves the specified checklist item.
-   * 
-   * @param rowId The item row id.
-   */
-  public Cursor fetchChecklistItem(long rowId) {
-    return mDb.query(CHECKLIST_ITEM_TBL, new String[] {KEY_ROWID, KEY_ITEM},
-        KEY_ROWID + "=" + rowId, null, null, null, null);
   }
   
   /**

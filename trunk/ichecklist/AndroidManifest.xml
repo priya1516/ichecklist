@@ -12,5 +12,6 @@
             </intent-filter>
         </activity>
         <activity android:name=".ChecklistEdit"/>
+        <activity android:name=".ChecklistItemEdit"/>
     </application>
 </manifest> 
