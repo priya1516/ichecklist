@@ -26,10 +26,9 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 /**
  * The checklist edit activity.
@@ -63,10 +62,10 @@ public class ChecklistEdit extends Activity {
   protected ListView mItemsControl;
 
   /** The save control. */
-  protected Button mSaveControl;
+  protected ImageButton mSaveControl;
 
   /** The cancel control. */
-  protected Button mCancelControl;
+  protected ImageButton mCancelControl;
   
   /** Whether the activity is cancelled. */
   protected boolean isCancelled;
@@ -83,8 +82,8 @@ public class ChecklistEdit extends Activity {
     // Initialize controls
     mNameControl = (EditText) findViewById(R.id.name);
     mItemsControl = (ListView) findViewById(R.id.items);
-    mSaveControl = (Button) findViewById(R.id.save);
-    mCancelControl = (Button) findViewById(R.id.cancel);
+    mSaveControl = (ImageButton) findViewById(R.id.save);
+    mCancelControl = (ImageButton) findViewById(R.id.cancel);
     mItemsControl.setEmptyView(findViewById(R.id.no_items)); // View to show when no items exist
     // mItemsControl.addHeaderView(findViewById(R.id.is_done_header));
     // mItemsControl.addHeaderView(findViewById(R.id.item_header));
@@ -133,6 +132,7 @@ public class ChecklistEdit extends Activity {
     });
   }
 
+  
   /**
    * Populates the fields with the data.
    */
@@ -142,15 +142,15 @@ public class ChecklistEdit extends Activity {
       Cursor checklistItemsCursor = mDbHelper.fetchAllChecklistItems(mListRowId);
       // String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
       // int[] to = {R.id.is_done_text, R.id.item_text};
-      String[] from = {ChecklistDBAdapter.KEY_ITEM};
-      int[] to = {R.id.item_text};
-      SimpleCursorAdapter checklistItems;
+      String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
+      int[] to = {R.id.item_is_done, R.id.item_text};
+      ChecklistAdapter checklistItems;
 
       startManagingCursor(checklistCursor);
       mNameControl.setText(checklistCursor.getString(
           checklistCursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_NAME)));
       startManagingCursor(checklistItemsCursor);
-      checklistItems = new SimpleCursorAdapter(this, R.layout.checklist_item_row,
+      checklistItems = new ChecklistAdapter(this, R.layout.checklist_item_row,
           checklistItemsCursor, from, to);
       mItemsControl.setAdapter(checklistItems);
     }
@@ -159,8 +159,16 @@ public class ChecklistEdit extends Activity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    menu.add(0, INSERT_ID, 0, R.string.menu_add_item);
-    menu.add(0, DELETE_ID, 0, R.string.menu_delete_item);
+    MenuItem item1 = menu.add(0, INSERT_ID, 0,R.string.menu_add_item);
+    {
+      item1.setAlphabeticShortcut('a');
+      item1.setIcon( R.drawable.add);
+    }
+    MenuItem item2 = menu.add(0, DELETE_ID, 0, R.string.menu_delete_item);
+    {
+      item2.setAlphabeticShortcut('d');
+      item2.setIcon( R.drawable.delete);
+    }
     return true;
   }
 
