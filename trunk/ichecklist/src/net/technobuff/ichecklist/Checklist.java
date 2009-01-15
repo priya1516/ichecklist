@@ -26,7 +26,6 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 /**
  * The checklist activity.
@@ -68,10 +67,10 @@ public class Checklist extends ListActivity {
     Cursor checklistCursor = mDbHelper.fetchAllCheckLists();
     String[] from = {ChecklistDBAdapter.KEY_NAME};
     int[] to = {R.id.checklist_name_text};
-    SimpleCursorAdapter checklists;
+    ChecklistAdapter checklists;
     
     startManagingCursor(checklistCursor);
-    checklists = new SimpleCursorAdapter(this, R.layout.checklist_row, checklistCursor,
+    checklists = new ChecklistAdapter(this, R.layout.checklist_row, checklistCursor,
         from, to);
     setListAdapter(checklists);
   }
@@ -79,8 +78,17 @@ public class Checklist extends ListActivity {
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
     super.onCreateOptionsMenu(menu);
-    menu.add(0, INSERT_ID, 0, R.string.menu_add_checklist);
-    menu.add(0, DELETE_ID, 0, R.string.menu_delete_checklist);
+     
+    MenuItem item1 = menu.add(0, INSERT_ID, 0,R.string.menu_add_checklist);
+    {
+      item1.setAlphabeticShortcut('a');
+      item1.setIcon( R.drawable.add);
+    }
+    MenuItem item2 = menu.add(0, DELETE_ID, 0, R.string.menu_delete_checklist);
+    {
+      item2.setAlphabeticShortcut('d');
+      item2.setIcon( R.drawable.delete);
+    }
     return true;
   }
 

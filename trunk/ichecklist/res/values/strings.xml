@@ -2,7 +2,7 @@
 <resources>
   <!-- Labels -->
   <string name="app_name">iChecklist</string>
-  <string name="name">Name</string>
+  <string name="name"><b>Name</b></string>
   <string name="menu_add_checklist">Add Checklist</string>
   <string name="menu_delete_checklist">Delete Checklist</string>
   <string name="menu_add_item">Add Item</string>

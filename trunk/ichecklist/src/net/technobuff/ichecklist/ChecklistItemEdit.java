@@ -25,6 +25,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 
 /**
  * The checklist item edit activity.
@@ -49,10 +50,10 @@ public class ChecklistItemEdit extends Activity {
   protected EditText mItemControl;
 
   /** The save control. */
-  protected Button mSaveControl;
+  protected ImageButton mSaveControl;
 
   /** The cancel control. */
-  protected Button mCancelControl;
+  protected ImageButton mCancelControl;
   
   /** Whether the activity is cancelled. */
   protected boolean isCancelled;
@@ -69,8 +70,8 @@ public class ChecklistItemEdit extends Activity {
     // Initialize controls
     mIsDoneControl = (CheckBox) findViewById(R.id.is_done);
     mItemControl = (EditText) findViewById(R.id.item);
-    mSaveControl = (Button) findViewById(R.id.save);
-    mCancelControl = (Button) findViewById(R.id.cancel);
+    mSaveControl = (ImageButton) findViewById(R.id.save);
+    mCancelControl = (ImageButton) findViewById(R.id.cancel);
 
     // Initialize data
     mItemRowId = (savedInstanceState != null) ?
