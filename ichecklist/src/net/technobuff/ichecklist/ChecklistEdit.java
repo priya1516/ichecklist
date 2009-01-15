@@ -239,7 +239,7 @@ public class ChecklistEdit extends Activity {
     int nItems = mItemsControl.getChildCount();
 
     if (mListRowId == null) {
-      long id = mDbHelper.createCheckList(name);
+      long id = mDbHelper.createChecklist(name);
       if (id > 0) {
         mListRowId = id;
       }

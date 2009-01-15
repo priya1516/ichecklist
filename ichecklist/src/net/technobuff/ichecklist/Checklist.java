@@ -43,8 +43,11 @@ public class Checklist extends ListActivity {
   /** The insert menu id. */
   protected static final int INSERT_ID = Menu.FIRST;
   
+  /** The copy menu id. */
+  protected static final int COPY_ID = INSERT_ID + 1;
+  
   /** The delete menu id. */
-  protected static final int DELETE_ID = INSERT_ID + 1;
+  protected static final int DELETE_ID = INSERT_ID + 2;
   
   /** The database helper. */
   protected ChecklistDBAdapter mDbHelper;
@@ -64,7 +67,7 @@ public class Checklist extends ListActivity {
    * Populates the view with all the checklists.
    */
   protected void fillData() {
-    Cursor checklistCursor = mDbHelper.fetchAllCheckLists();
+    Cursor checklistCursor = mDbHelper.fetchAllChecklists();
     String[] from = {ChecklistDBAdapter.KEY_NAME};
     int[] to = {R.id.checklist_name_text};
     ChecklistAdapter checklists;
@@ -77,18 +80,22 @@ public class Checklist extends ListActivity {
   
   @Override
   public boolean onCreateOptionsMenu(Menu menu) {
+    MenuItem item1;
+    MenuItem item2;
+    MenuItem item3;
+    
     super.onCreateOptionsMenu(menu);
      
-    MenuItem item1 = menu.add(0, INSERT_ID, 0,R.string.menu_add_checklist);
-    {
-      item1.setAlphabeticShortcut('a');
-      item1.setIcon( R.drawable.add);
-    }
-    MenuItem item2 = menu.add(0, DELETE_ID, 0, R.string.menu_delete_checklist);
-    {
-      item2.setAlphabeticShortcut('d');
-      item2.setIcon( R.drawable.delete);
-    }
+    item1 = menu.add(0, INSERT_ID, 0,R.string.menu_add_checklist);
+    item1.setAlphabeticShortcut('a');
+    item1.setIcon( R.drawable.add);
+    item2 = menu.add(0, COPY_ID, 0,R.string.menu_copy_checklist);
+    item2.setAlphabeticShortcut('c');
+    item2.setIcon( R.drawable.copy);
+    item3 = menu.add(0, DELETE_ID, 0, R.string.menu_delete_checklist);
+    item3.setAlphabeticShortcut('d');
+    item3.setIcon( R.drawable.delete);
+    
     return true;
   }
 
@@ -99,6 +106,10 @@ public class Checklist extends ListActivity {
     switch(item.getItemId()) {
       case INSERT_ID:
         createChecklist();
+        retval = true;
+        break;
+      case COPY_ID:
+        copyChecklist(getListView().getSelectedItemId());
         retval = true;
         break;
       case DELETE_ID:
@@ -135,5 +146,22 @@ public class Checklist extends ListActivity {
   protected void createChecklist() {
     Intent intent = new Intent(this, ChecklistEdit.class);
     startActivityForResult(intent, ACTIVITY_CREATE);
+  }
+  
+  /**
+   * Creates a copy of the selected checklist.
+   * <p/>
+   * @param id The source checklist id.
+   */
+  protected void copyChecklist(long id) {
+    Intent intent;
+    
+    // Copy checklist
+    id = mDbHelper.copyChecklist(id);
+    
+    // Edit it now
+    intent = new Intent(this, ChecklistEdit.class);
+    intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
+    startActivityForResult(intent, ACTIVITY_EDIT);
   }
 }
