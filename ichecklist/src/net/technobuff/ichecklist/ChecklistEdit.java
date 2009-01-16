@@ -144,13 +144,13 @@ public class ChecklistEdit extends Activity {
       // int[] to = {R.id.is_done_text, R.id.item_text};
       String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
       int[] to = {R.id.item_is_done, R.id.item_text};
-      ChecklistAdapter checklistItems;
+      ChecklistItemAdapter checklistItems;
 
       startManagingCursor(checklistCursor);
       mNameControl.setText(checklistCursor.getString(
           checklistCursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_NAME)));
       startManagingCursor(checklistItemsCursor);
-      checklistItems = new ChecklistAdapter(this, R.layout.checklist_item_row,
+      checklistItems = new ChecklistItemAdapter(this, R.layout.checklist_item_row,
           checklistItemsCursor, from, to);
       mItemsControl.setAdapter(checklistItems);
     }
