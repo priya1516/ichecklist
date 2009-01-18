@@ -1,22 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
   android:orientation="vertical" android:layout_width="fill_parent"
-  android:background="@drawable/solid_green"
+  android:background="@color/blue"
   android:layout_height="fill_parent">
   
   <!-- Name -->
   <LinearLayout android:orientation="horizontal"
     android:layout_width="fill_parent"
-    android:background="@drawable/solid_blue"
+    android:background="@drawable/gray"
+     android:padding="2px"
     android:layout_height="wrap_content">
     <TextView android:layout_width="wrap_content"
       android:layout_height="wrap_content" 
-      android:textColor="@color/translucent_red"
+      android:textColor="@color/black"
       android:textSize="@dimen/sixteen_sp"
       android:padding="@dimen/sixteen_sp"
       android:text="@string/name" />
     <EditText android:id="@+id/name" 
       android:layout_width="fill_parent"
+      android:padding="5px"
+      android:textColor="@color/red"
+      android:textSize="15px"
+      android:maxLength="50"
+      android:singleLine="True"
       android:layout_height="wrap_content"/> 
   </LinearLayout>
 
@@ -35,6 +41,7 @@
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
     android:layout_weight="1"
+    android:padding="5px"
     android:scrollbars="vertical"/>
   <TextView android:id="@+id/no_items"
     android:layout_width="wrap_content"

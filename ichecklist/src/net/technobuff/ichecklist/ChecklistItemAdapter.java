@@ -18,22 +18,14 @@
 // Package
 package net.technobuff.ichecklist;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.util.AttributeSet;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 
 /**
@@ -71,22 +63,21 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
     public RowWithIconView(Context context, int position) {
       this(context);
       this.setOrientation(HORIZONTAL);
-      icon = new ImageView(context);
       boolean isDone = "1".equals(cursor.getString(1));
-      if(isDone)
-        icon.setImageDrawable(getResources().getDrawable(R.drawable.done));
-      else
-        icon.setImageDrawable(getResources().getDrawable(R.drawable.pending));
-       // left, top, right, bottom 
-      icon.setPadding(0, 2, 5, 0); // 2px up, 5px to the right 
-      icon.setClickable(true);
       
-      addView(icon, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       text = new TextView(context);
       text.setText(cursor.getString(2));
+      text.setTextColor(Color.BLACK);
       addView(text, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      if(isDone) {
+        icon = new ImageView(context);
+        icon.setImageDrawable(getResources().getDrawable(R.drawable.done));
+        // left, top, right, bottom 
+        icon.setPadding(0, 2, 5, 0); // 2px up, 5px to the right 
+        addView(icon, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      }
       if(position % 2 == 0) {
-        this.setBackgroundColor (Color.LTGRAY ); 
+        this.setBackgroundColor (Color.rgb(170, 172, 240) ); 
       } 
       else {
         this.setBackgroundColor(Color.WHITE);

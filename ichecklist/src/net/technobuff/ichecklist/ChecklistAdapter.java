@@ -39,7 +39,7 @@ public class ChecklistAdapter extends SimpleCursorAdapter {
     View row = super.getView(position, convertView, parent); 
 
     if(position % 2 == 0) {
-      row.setBackgroundColor (Color.LTGRAY); 
+      row.setBackgroundColor (Color.rgb(170, 172, 240) ); 
     } 
     else {
       row.setBackgroundColor(Color.WHITE);
