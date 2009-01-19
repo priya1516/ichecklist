@@ -28,7 +28,9 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ListAdapter;
 import android.widget.ListView;
+import android.widget.SimpleCursorAdapter;
 
 /**
  * The checklist edit activity.
@@ -150,6 +152,7 @@ public class ChecklistEdit extends Activity {
       mNameControl.setText(checklistCursor.getString(
           checklistCursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_NAME)));
       startManagingCursor(checklistItemsCursor);
+            
       checklistItems = new ChecklistItemAdapter(this, R.layout.checklist_item_row,
           checklistItemsCursor, from, to);
       mItemsControl.setAdapter(checklistItems);

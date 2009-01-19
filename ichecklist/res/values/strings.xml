@@ -3,9 +3,9 @@
   <!-- Labels -->
   <string name="app_name">iChecklist</string>
   <string name="name"><b>Name</b></string>
-  <string name="menu_add_checklist">Add Checklist</string>
-  <string name="menu_copy_checklist">Copy Checklist</string>
-  <string name="menu_delete_checklist">Delete Checklist</string>
+  <string name="menu_add_checklist">Add list</string>
+  <string name="menu_copy_checklist">Copy list</string>
+  <string name="menu_delete_checklist">Delete list</string>
   <string name="menu_add_item">Add Item</string>
   <string name="menu_delete_item">Delete Item</string>
   <string name="items">Items</string>
