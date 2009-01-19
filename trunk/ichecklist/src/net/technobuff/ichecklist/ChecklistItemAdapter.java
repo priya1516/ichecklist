@@ -19,6 +19,7 @@
 package net.technobuff.ichecklist;
 
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.view.View;
@@ -64,11 +65,20 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
       this(context);
       this.setOrientation(HORIZONTAL);
       boolean isDone = "1".equals(cursor.getString(1));
-      
       text = new TextView(context);
       text.setText(cursor.getString(2));
       text.setTextColor(Color.BLACK);
-      addView(text, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      text.setPadding(5, 5, 5, 5);
+      text.setTextSize(15);
+      text.setTextColor(new ColorStateList(
+          new int[][] { 
+              new int[] { android.R.attr.state_selected }, 
+              new int[0], 
+          }, new int[] { 
+              Color.rgb(255, 128, 192), 
+              Color.BLACK, 
+          } 
+));
       if(isDone) {
         icon = new ImageView(context);
         icon.setImageDrawable(getResources().getDrawable(R.drawable.done));
@@ -76,6 +86,12 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
         icon.setPadding(0, 2, 5, 0); // 2px up, 5px to the right 
         addView(icon, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       }
+      else {
+        text.setPadding(25, 5, 5, 5);
+      }
+      
+      addView(text, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
+      
       if(position % 2 == 0) {
         this.setBackgroundColor (Color.rgb(170, 172, 240) ); 
       } 
