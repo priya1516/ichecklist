@@ -64,7 +64,7 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
     public RowWithIconView(Context context, int position) {
       this(context);
       this.setOrientation(HORIZONTAL);
-      boolean isDone = "1".equals(cursor.getString(1));
+      boolean isDone = "1".equals(cursor.getString(cursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_IS_DONE)));
       text = new TextView(context);
       text.setText(cursor.getString(2));
       text.setTextColor(Color.BLACK);
@@ -75,7 +75,7 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
               new int[] { android.R.attr.state_selected }, 
               new int[0], 
           }, new int[] { 
-              Color.rgb(255, 128, 192), 
+              Color.parseColor("#D20D2A"), 
               Color.BLACK, 
           } 
 ));
