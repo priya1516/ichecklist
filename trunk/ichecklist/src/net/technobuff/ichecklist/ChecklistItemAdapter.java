@@ -83,11 +83,11 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
         icon = new ImageView(context);
         icon.setImageDrawable(getResources().getDrawable(R.drawable.done));
         // left, top, right, bottom 
-        icon.setPadding(0, 2, 5, 0); // 2px up, 5px to the right 
+        icon.setPadding(5, 5, 5, 5); // 2px up, 5px to the right 
         addView(icon, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
       }
       else {
-        text.setPadding(25, 5, 5, 5);
+        text.setPadding(30, 5, 5, 5);
       }
       
       addView(text, new LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT));
