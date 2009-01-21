@@ -22,15 +22,14 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.SimpleCursorAdapter;
 
 /**
  * The checklist edit activity.
@@ -39,6 +38,9 @@ import android.widget.SimpleCursorAdapter;
  */
 public class ChecklistEdit extends Activity {
 
+  /** The checklist edit activity. */
+  protected static final String TAG = "ChecklistEdit";
+  
   /** The create activity. */
   protected static final int ACTIVITY_CREATE = 0;
 
@@ -87,8 +89,6 @@ public class ChecklistEdit extends Activity {
     mSaveControl = (ImageButton) findViewById(R.id.save);
     mCancelControl = (ImageButton) findViewById(R.id.cancel);
     mItemsControl.setEmptyView(findViewById(R.id.no_items)); // View to show when no items exist
-    // mItemsControl.addHeaderView(findViewById(R.id.is_done_header));
-    // mItemsControl.addHeaderView(findViewById(R.id.item_header));
 
     // Initialize data
     mListRowId = (savedInstanceState != null) ?
@@ -107,18 +107,7 @@ public class ChecklistEdit extends Activity {
         intent.putExtra(ChecklistDBAdapter.KEY_LIST_ID, mListRowId);
         startActivityForResult(intent, ACTIVITY_EDIT);
       }
-
-      public void onClick(View view) {
-        View v = view;
-      }
     });
-    /*
-    mItemsControl.setOnClickListener(new AdapterView.OnClickListener() {
-      public void onClick(View view) {
-        View v = view;
-      }
-    });
-    */
     mSaveControl.setOnClickListener(new View.OnClickListener() {
       public void onClick(View view) {
         setResult(RESULT_OK);
@@ -142,8 +131,6 @@ public class ChecklistEdit extends Activity {
     if (mListRowId != null) {
       Cursor checklistCursor = mDbHelper.fetchChecklist(mListRowId);
       Cursor checklistItemsCursor = mDbHelper.fetchAllChecklistItems(mListRowId);
-      // String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
-      // int[] to = {R.id.is_done_text, R.id.item_text};
       String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
       int[] to = {R.id.item_is_done, R.id.item_text};
       ChecklistItemAdapter checklistItems;
@@ -239,16 +226,20 @@ public class ChecklistEdit extends Activity {
    */
   protected void saveState() {
     String name = mNameControl.getText().toString();
-    int nItems = mItemsControl.getChildCount();
 
     if (mListRowId == null) {
       long id = mDbHelper.createChecklist(name);
       if (id > 0) {
         mListRowId = id;
       }
+      else {
+        Log.e(TAG, "Could not create checklist '" + name + "'.");
+      }
     }
     else {
-      mDbHelper.updateChecklist(mListRowId, name);
+      if (!mDbHelper.updateChecklist(mListRowId, name)) {
+        Log.e(TAG, "Could not update checklist '" + name + "'.");
+      }
     }
   }
 }
