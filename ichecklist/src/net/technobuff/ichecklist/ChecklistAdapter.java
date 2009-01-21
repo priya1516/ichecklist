@@ -25,10 +25,8 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.SimpleCursorAdapter;
 import android.widget.TextView;
-import android.widget.LinearLayout.LayoutParams;
 
 /**
  * The checklist adapter.
@@ -39,7 +37,7 @@ public class ChecklistAdapter extends SimpleCursorAdapter {
   private TextView text;
   private Context context;
   private Cursor cursor;
-  
+
   public ChecklistAdapter(Activity context, int task_row, Cursor tasks2, String[] from, int[] to) { 
     super(context , task_row,tasks2, from, to); 
     this.cursor = cursor;
@@ -57,7 +55,7 @@ public class ChecklistAdapter extends SimpleCursorAdapter {
             Color.parseColor("#D20D2A"), 
             Color.BLACK, 
         } 
-));    
+    ));    
     if(position % 2 == 0) {
       row.setBackgroundColor (Color.rgb(170, 172, 240) ); 
     } 

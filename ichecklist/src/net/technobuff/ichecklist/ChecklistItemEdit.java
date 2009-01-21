@@ -21,8 +21,8 @@ package net.technobuff.ichecklist;
 import android.app.Activity;
 import android.database.Cursor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
-import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -34,6 +34,9 @@ import android.widget.ImageButton;
  */
 public class ChecklistItemEdit extends Activity {
 
+  /** The tag. */
+  protected static final String TAG = "ChecklistItemEdit";
+  
   /** The database helper. */
   protected ChecklistDBAdapter mDbHelper;
 
@@ -115,7 +118,6 @@ public class ChecklistItemEdit extends Activity {
       boolean isDone;
 
       startManagingCursor(cursor);
-      //mListId = cursor.getLong(cursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_LIST_ID));
       isDoneStr = cursor.getString(cursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_IS_DONE));
       isDone = "1".equals(isDoneStr);
       mIsDoneControl.setChecked(isDone);
@@ -157,9 +159,14 @@ public class ChecklistItemEdit extends Activity {
       if (id > 0) {
         mItemRowId = id;
       }
+      else {
+        Log.e(TAG, "Could not create item '" + item + "'.");
+      }
     }
     else {
-      mDbHelper.updateChecklistItem(mItemRowId, item, isDone);
+      if (!mDbHelper.updateChecklistItem(mItemRowId, item, isDone)) {
+        Log.e(TAG, "Could not update item '" + item + "'.");
+      }
     }
   }
 }
