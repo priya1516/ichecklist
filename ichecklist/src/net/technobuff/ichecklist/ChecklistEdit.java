@@ -19,6 +19,9 @@
 package net.technobuff.ichecklist;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -50,8 +53,11 @@ public class ChecklistEdit extends Activity {
   /** The insert menu id. */
   protected static final int INSERT_ID = Menu.FIRST;
 
+  /** The copy menu id. */
+  protected static final int COPY_ID = INSERT_ID + 1;
+  
   /** The delete menu id. */
-  protected static final int DELETE_ID = INSERT_ID + 1;
+  protected static final int DELETE_ID = INSERT_ID + 2;
 
   /** The database helper. */
   protected ChecklistDBAdapter mDbHelper;
@@ -154,10 +160,15 @@ public class ChecklistEdit extends Activity {
       item1.setAlphabeticShortcut('a');
       item1.setIcon( R.drawable.add);
     }
-    MenuItem item2 = menu.add(0, DELETE_ID, 0, R.string.menu_delete_item);
+    MenuItem item2 = menu.add(0, COPY_ID, 0, R.string.menu_copy_item);
     {
-      item2.setAlphabeticShortcut('d');
-      item2.setIcon( R.drawable.delete);
+      item2.setAlphabeticShortcut('c');
+      item2.setIcon( R.drawable.copy);
+    }
+    MenuItem item3 = menu.add(0, DELETE_ID, 0, R.string.menu_delete_item);
+    {
+      item3.setAlphabeticShortcut('d');
+      item3.setIcon( R.drawable.delete);
     }
     return true;
   }
@@ -171,9 +182,32 @@ public class ChecklistEdit extends Activity {
         createChecklistItem();
         retval = true;
         break;
+      case COPY_ID:
+        copyChecklistItem(mItemsControl.getSelectedItemId());
+        retval = true;
+        break;
       case DELETE_ID:
-        mDbHelper.deleteChecklist(mItemsControl.getSelectedItemId());
-        populateFields();
+        new AlertDialog.Builder(this)
+        .setTitle(R.string.confirm)
+        .setMessage(R.string.confirm_delete)
+        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+
+          public void onClick(DialogInterface dialog, int which) {
+            // TODO Auto-generated method stub 
+            mDbHelper.deleteChecklistItem(mItemsControl.getSelectedItemId());
+            populateFields();
+            setResult(RESULT_OK);
+          }
+        })
+        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+
+          public void onClick(DialogInterface dialog, int which) {
+            // Do nothing
+          }
+          
+        })
+        .show();
+//        populateFields();
         retval = true;
         break;
       default:
@@ -220,7 +254,24 @@ public class ChecklistEdit extends Activity {
     intent.putExtra(ChecklistDBAdapter.KEY_LIST_ID, mListRowId);
     startActivityForResult(intent, ACTIVITY_CREATE);
   }
-
+  
+  /**
+   * Creates a copy of the selected checklistitem.
+   * <p/>
+   * @param id The source checklistitem id.
+   */
+  protected void copyChecklistItem(long id) {
+    Intent intent;
+    
+    // Copy checklist
+    id = mDbHelper.copyChecklistItem(id);
+    
+    // Edit it now
+    intent = new Intent(this, ChecklistItemEdit.class);
+    intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
+    startActivityForResult(intent, ACTIVITY_EDIT);
+  }
+  
   /**
    * Saves state.
    */

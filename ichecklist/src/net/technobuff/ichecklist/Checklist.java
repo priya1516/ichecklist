@@ -18,7 +18,9 @@
 // Package
 package net.technobuff.ichecklist;
 
+import android.app.AlertDialog;
 import android.app.ListActivity;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
@@ -113,8 +115,27 @@ public class Checklist extends ListActivity {
         retval = true;
         break;
       case DELETE_ID:
+      new AlertDialog.Builder(this)
+      .setTitle(R.string.confirm)
+      .setMessage(R.string.confirm_delete)
+      .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+
+        public void onClick(DialogInterface dialog, int which) {
+          // TODO Auto-generated method stub
         mDbHelper.deleteChecklist(getListView().getSelectedItemId());
         fillData();
+        setResult(RESULT_OK);
+        }
+      })
+      .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+
+        public void onClick(DialogInterface dialog, int which) {
+          // Do nothing
+        }
+        
+      })
+      .show();
+       
         retval = true;
         break;
       default:

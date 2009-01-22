@@ -7,6 +7,7 @@
   <string name="menu_copy_checklist">Copy List</string>
   <string name="menu_delete_checklist">Delete List</string>
   <string name="menu_add_item">Add Item</string>
+  <string name="menu_copy_item">Copy Item</string>
   <string name="menu_delete_item">Delete Item</string>
   <string name="items">Items</string>
   <string name="item">Item</string>
@@ -17,4 +18,8 @@
   <!-- Messages -->
   <string name="no_checklists">No checklists!</string>
   <string name="no_items">No items in the checklist!</string>
+  <string name="confirm">Confirm</string>
+  <string name="confirm_delete">Are you sure you want to delete?</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
 </resources>

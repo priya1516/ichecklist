@@ -173,6 +173,38 @@ public class ChecklistDBAdapter {
     return id;
   }
   
+  public long copyChecklistItem(long itemId) {
+    long listId = 0;
+    long newItemId = 0;
+    String name;
+    Cursor checklistItemCursor = null;
+    
+    try {
+      
+      checklistItemCursor = fetchChecklistItem(itemId);
+      name = "Copy of " + checklistItemCursor.getString(checklistItemCursor.getColumnIndexOrThrow(KEY_ITEM));
+      listId = checklistItemCursor.getLong(checklistItemCursor.getColumnIndexOrThrow(KEY_LIST_ID));
+      if (checklistItemCursor != null) {
+          newItemId = createChecklistItem(listId, name);
+      }
+    }
+    finally {
+      try {
+        if (checklistItemCursor != null) {
+          checklistItemCursor.close();
+        }
+      }
+      catch(Exception ex) {}
+      try {
+        if (checklistItemCursor != null) {
+          checklistItemCursor.close();
+        }
+      }
+      catch(Exception ex) {}
+    }
+    
+    return newItemId;
+  }
   /**
    * Creates a checklist item for the specified list.
    * 
@@ -227,7 +259,7 @@ public class ChecklistDBAdapter {
    * @param itemId The item id.
    */
   public Cursor fetchChecklistItem(long itemId) {
-    Cursor cursor = mDb.query(true, CHECKLIST_ITEM_TBL, new String[] {KEY_ROWID, KEY_IS_DONE, KEY_ITEM},
+    Cursor cursor = mDb.query(true, CHECKLIST_ITEM_TBL, new String[] {KEY_ROWID, KEY_LIST_ID, KEY_IS_DONE, KEY_ITEM},
         KEY_ROWID + "=" + itemId, null, null, null, null, null);
     if (cursor != null) {
       cursor.moveToFirst();
@@ -274,9 +306,9 @@ public class ChecklistDBAdapter {
    */
   public boolean deleteChecklist(long listId) {
     boolean status = deleteChecklistItems(listId);
-    if (status) {
+//    if (status) {
       status = mDb.delete(CHECKLIST_TBL, KEY_ROWID + "=" + listId, null) > 0;
-    }
+//    }
     return status;
   }
   
@@ -291,6 +323,16 @@ public class ChecklistDBAdapter {
     return mDb.delete(CHECKLIST_ITEM_TBL, KEY_LIST_ID + "=" + listId, null) > 0;
   }
   
+  /**
+   * Deletes a specific item.
+   * 
+   * @param itemId The item id.
+   * 
+   * @return Returns true if the deletion was successful. Otherwise, false.
+   */
+  public boolean deleteChecklistItem(long itemId) {
+    return mDb.delete(CHECKLIST_ITEM_TBL, KEY_ROWID + "=" + itemId, null) > 0;
+  }
   /** The database helper. */
   protected static class DBHelper extends SQLiteOpenHelper {
     
