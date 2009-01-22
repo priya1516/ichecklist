@@ -49,11 +49,10 @@ public class ChecklistAdapter extends SimpleCursorAdapter {
     TextView text = (TextView)row.findViewById(R.id.checklist_name_text);
     text.setTextColor(new ColorStateList(
         new int[][] { 
-            new int[] { android.R.attr.state_selected, android.R.attr.state_focused }, 
+            new int[] { android.R.attr.state_selected}, 
             new int[0], 
         }, new int[] { 
             Color.parseColor("#D20D2A"),
-            Color.parseColor("#D20D2A"), 
             Color.BLACK, 
         } 
     ));    
