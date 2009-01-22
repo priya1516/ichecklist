@@ -136,7 +136,7 @@ public class ChecklistEdit extends Activity {
   protected void populateFields() {
     if (mListRowId != null) {
       Cursor checklistCursor = mDbHelper.fetchChecklist(mListRowId);
-      Cursor checklistItemsCursor = mDbHelper.fetchAllChecklistItems(mListRowId);
+      Cursor checklistItemsCursor = mDbHelper.fetchChecklistItems(mListRowId);
       String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
       int[] to = {R.id.item_is_done, R.id.item_text};
       ChecklistItemAdapter checklistItems;

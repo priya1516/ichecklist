@@ -155,7 +155,7 @@ public class ChecklistItemEdit extends Activity {
     boolean isDone = mIsDoneControl.isChecked();
 
     if (mItemRowId == null) {
-      long id = mDbHelper.createChecklistItem(mListId, item);
+      long id = mDbHelper.createChecklistItem(mListId, item, isDone);
       if (id > 0) {
         mItemRowId = id;
       }
