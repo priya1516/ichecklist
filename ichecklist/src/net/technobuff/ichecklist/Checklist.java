@@ -78,6 +78,7 @@ public class Checklist extends ListActivity {
     checklists = new ChecklistAdapter(this, R.layout.checklist_row, checklistCursor,
         from, to);
     setListAdapter(checklists);
+    this.setSelection(0);
   }
   
   @Override
@@ -115,28 +116,31 @@ public class Checklist extends ListActivity {
         retval = true;
         break;
       case DELETE_ID:
-      new AlertDialog.Builder(this)
-      .setTitle(R.string.confirm)
-      .setMessage(R.string.confirm_delete)
-      .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
-
-        public void onClick(DialogInterface dialog, int which) {
-          // TODO Auto-generated method stub
-        mDbHelper.deleteChecklist(getListView().getSelectedItemId());
-        fillData();
-        setResult(RESULT_OK);
+        final long listId = getListView().getSelectedItemId();
+        if (listId > 0) {
+          new AlertDialog.Builder(this)
+          .setTitle(R.string.confirm)
+          .setMessage(R.string.confirm_delete)
+          .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+    
+            public void onClick(DialogInterface dialog, int which) {
+              // TODO Auto-generated method stub
+            mDbHelper.deleteChecklist(listId);
+            fillData();
+            setResult(RESULT_OK);
+            }
+          })
+          .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+    
+            public void onClick(DialogInterface dialog, int which) {
+              // Do nothing
+            }
+            
+          })
+          .show();
+           
+            retval = true;
         }
-      })
-      .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-
-        public void onClick(DialogInterface dialog, int which) {
-          // Do nothing
-        }
-        
-      })
-      .show();
-       
-        retval = true;
         break;
       default:
         retval = super.onMenuItemSelected(featureId, item);
@@ -177,12 +181,14 @@ public class Checklist extends ListActivity {
   protected void copyChecklist(long id) {
     Intent intent;
     
-    // Copy checklist
-    id = mDbHelper.copyChecklist(id);
-    
-    // Edit it now
-    intent = new Intent(this, ChecklistEdit.class);
-    intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
-    startActivityForResult(intent, ACTIVITY_EDIT);
+    if(id > 0) {
+      // Copy checklist
+      id = mDbHelper.copyChecklist(id);
+      
+      // Edit it now
+      intent = new Intent(this, ChecklistEdit.class);
+      intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
+      startActivityForResult(intent, ACTIVITY_EDIT);
+    }
   }
 }
