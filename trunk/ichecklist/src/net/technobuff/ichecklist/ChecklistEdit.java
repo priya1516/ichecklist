@@ -149,6 +149,10 @@ public class ChecklistEdit extends Activity {
       checklistItems = new ChecklistItemAdapter(this, R.layout.checklist_item_row,
           checklistItemsCursor, from, to);
       mItemsControl.setAdapter(checklistItems);
+      mItemsControl.setFocusable(true);
+//      mItemsControl.setFocusableInTouchMode(true);
+      mItemsControl.requestFocus();
+      mItemsControl.setSelection(0);
     }
   }
 
@@ -187,28 +191,31 @@ public class ChecklistEdit extends Activity {
         retval = true;
         break;
       case DELETE_ID:
-        new AlertDialog.Builder(this)
-        .setTitle(R.string.confirm)
-        .setMessage(R.string.confirm_delete)
-        .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
-
-          public void onClick(DialogInterface dialog, int which) {
-            // TODO Auto-generated method stub 
-            mDbHelper.deleteChecklistItem(mItemsControl.getSelectedItemId());
-            populateFields();
-            setResult(RESULT_OK);
-          }
-        })
-        .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
-
-          public void onClick(DialogInterface dialog, int which) {
-            // Do nothing
-          }
-          
-        })
-        .show();
-//        populateFields();
-        retval = true;
+        final long itemId = mItemsControl.getSelectedItemId();
+        if(itemId > 0) {
+          new AlertDialog.Builder(this)
+          .setTitle(R.string.confirm)
+          .setMessage(R.string.confirm_delete)
+          .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener(){
+  
+            public void onClick(DialogInterface dialog, int which) {
+              // TODO Auto-generated method stub 
+              mDbHelper.deleteChecklistItem(itemId);
+              populateFields();
+              setResult(RESULT_OK);
+            }
+          })
+          .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
+  
+            public void onClick(DialogInterface dialog, int which) {
+              // Do nothing
+            }
+            
+          })
+          .show();
+  //        populateFields();
+          retval = true;
+        }
         break;
       default:
         retval = super.onMenuItemSelected(featureId, item);
@@ -263,13 +270,15 @@ public class ChecklistEdit extends Activity {
   protected void copyChecklistItem(long id) {
     Intent intent;
     
-    // Copy checklist
-    id = mDbHelper.copyChecklistItem(id);
-    
-    // Edit it now
-    intent = new Intent(this, ChecklistItemEdit.class);
-    intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
-    startActivityForResult(intent, ACTIVITY_EDIT);
+    if (id > 0) {
+      // Copy checklist
+      id = mDbHelper.copyChecklistItem(id);
+      
+      // Edit it now
+      intent = new Intent(this, ChecklistItemEdit.class);
+      intent.putExtra(ChecklistDBAdapter.KEY_ROWID, id);
+      startActivityForResult(intent, ACTIVITY_EDIT);
+    }
   }
   
   /**

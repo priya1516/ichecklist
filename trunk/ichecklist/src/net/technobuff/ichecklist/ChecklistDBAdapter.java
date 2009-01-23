@@ -303,7 +303,6 @@ public class ChecklistDBAdapter {
     Cursor checklistItemCursor = null;
     
     try {
-      
       checklistItemCursor = fetchChecklistItem(itemId);
       name = "Copy of " + checklistItemCursor.getString(checklistItemCursor.getColumnIndexOrThrow(KEY_ITEM));
       listId = checklistItemCursor.getLong(checklistItemCursor.getColumnIndexOrThrow(KEY_LIST_ID));
@@ -337,7 +336,10 @@ public class ChecklistDBAdapter {
    * @return Returns true if the deletion was successful. Otherwise, false.
    */
   public boolean deleteChecklistItem(long itemId) {
-    return mDb.delete(CHECKLIST_ITEM_TBL, KEY_ROWID + "=" + itemId, null) > 0;
+    if(itemId > 0)
+      return mDb.delete(CHECKLIST_ITEM_TBL, KEY_ROWID + "=" + itemId, null) > 0;
+    else 
+      return false;
   }
   
   /** The database helper. */
