@@ -12,6 +12,8 @@
   <string name="items">Items</string>
   <string name="item">Item</string>
   <string name="is_done">Done?</string>
+  <string name="accept">Accept</string>
+  <string name="reject">Reject</string>
   <string name="save">Save</string>
   <string name="cancel">Cancel</string>
   

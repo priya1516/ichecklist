@@ -20,7 +20,6 @@ package net.technobuff.ichecklist;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -140,7 +139,7 @@ public class ChecklistEdit extends Activity {
       String[] from = {ChecklistDBAdapter.KEY_IS_DONE, ChecklistDBAdapter.KEY_ITEM};
       int[] to = {R.id.item_is_done, R.id.item_text};
       ChecklistItemAdapter checklistItems;
-
+      
       startManagingCursor(checklistCursor);
       mNameControl.setText(checklistCursor.getString(
           checklistCursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_NAME)));
@@ -149,10 +148,6 @@ public class ChecklistEdit extends Activity {
       checklistItems = new ChecklistItemAdapter(this, R.layout.checklist_item_row,
           checklistItemsCursor, from, to);
       mItemsControl.setAdapter(checklistItems);
-      mItemsControl.setFocusable(true);
-//      mItemsControl.setFocusableInTouchMode(true);
-      mItemsControl.requestFocus();
-      mItemsControl.setSelection(0);
     }
   }
 

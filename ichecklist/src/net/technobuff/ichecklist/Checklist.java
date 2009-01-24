@@ -18,16 +18,19 @@
 // Package
 package net.technobuff.ichecklist;
 
+import static net.technobuff.ichecklist.ChecklistCommon.IS_LICENSE_ACCEPTED;
 import android.app.AlertDialog;
 import android.app.ListActivity;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ListView;
+
 
 /**
  * The checklist activity.
@@ -36,11 +39,14 @@ import android.widget.ListView;
  */
 public class Checklist extends ListActivity {
   
+  /** The license activity. */
+  protected static final int ACTIVITY_LICENSE = 0;
+  
   /** The create activity. */
-  protected static final int ACTIVITY_CREATE = 0;
+  protected static final int ACTIVITY_CREATE = 1;
   
   /** The edit activity. */
-  protected static final int ACTIVITY_EDIT = 1;
+  protected static final int ACTIVITY_EDIT = 2;
   
   /** The insert menu id. */
   protected static final int INSERT_ID = Menu.FIRST;
@@ -53,16 +59,35 @@ public class Checklist extends ListActivity {
   
   /** The database helper. */
   protected ChecklistDBAdapter mDbHelper;
+
+  /** Whether the license is accepted. */
+  boolean isLicenseAccepted;  
   
 
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
+    SharedPreferences preferences = getPreferences(android.content.Context.MODE_PRIVATE);
+    ChecklistCommon.setPreferences(preferences);
+    isLicenseAccepted = preferences.getBoolean(IS_LICENSE_ACCEPTED, false);
     setContentView(R.layout.checklists);
     mDbHelper = new ChecklistDBAdapter(this);
     mDbHelper.open();
-    fillData();
+    if (isLicenseAccepted) {
+      fillData();
+    }
+    else {
+      showLicense();
+    }
+  }
+
+  /**
+   * Shows the license.
+   */
+  protected void showLicense() {
+    Intent intent = new Intent(this, ChecklistLicense.class);
+    startActivityForResult(intent, ACTIVITY_LICENSE);
   }
 
   /**
@@ -78,7 +103,6 @@ public class Checklist extends ListActivity {
     checklists = new ChecklistAdapter(this, R.layout.checklist_row, checklistCursor,
         from, to);
     setListAdapter(checklists);
-    this.setSelection(0);
   }
   
   @Override
@@ -138,8 +162,7 @@ public class Checklist extends ListActivity {
             
           })
           .show();
-           
-            retval = true;
+          retval = true;
         }
         break;
       default:
@@ -162,7 +185,19 @@ public class Checklist extends ListActivity {
   protected void onActivityResult(int requestCode, int resultCode, 
       Intent intent) {
     super.onActivityResult(requestCode, resultCode, intent);
-    fillData();
+    if (requestCode == ACTIVITY_LICENSE) {
+      SharedPreferences preferences = ChecklistCommon.getPreferences();
+      boolean isLicenseAccepted = preferences.getBoolean(IS_LICENSE_ACCEPTED, false);
+      if (!isLicenseAccepted) {
+        finish();
+      }
+      else {
+        fillData();
+      }
+    }
+    else {
+      fillData();
+    }
   }
 
   /**
