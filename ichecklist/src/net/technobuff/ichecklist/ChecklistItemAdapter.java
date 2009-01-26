@@ -22,6 +22,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -35,14 +36,24 @@ import android.widget.TextView;
  * @author Kavita
  */
 public class ChecklistItemAdapter extends SimpleCursorAdapter {
-  private Cursor cursor;
-  private Context context;
-  public ChecklistItemAdapter(Context context, int task_row, Cursor cursor, String[] from, int[] to) { 
-    super(context , task_row, cursor, from, to);
+  
+  /** The adapter's context. */
+  protected Context context;
+  
+  /** The checklist items cursor. */
+  protected Cursor cursor;
+  
+  
+  /**
+   * Initializes the adpater.
+   */
+  public ChecklistItemAdapter(Context context, int taskRow, Cursor cursor, String[] from, int[] to) { 
+    super(context, taskRow, cursor, from, to);
     this.cursor = cursor;
     this.context = context;
   } 
 
+  @Override
   public View getView(int position, View convertView, ViewGroup parent) { 
     super.getItem(position);
     
@@ -51,22 +62,32 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
     return rowIcon;
   }
   
-  class RowWithIconView extends LinearLayout {
-    ImageView icon;
-    TextView text;
-    Context context;
-    protected static final int ACTIVITY_EDIT = 1;
-    public RowWithIconView(Context context) {
-      super(context);
-      this.context = context;
-    }
+  /**
+   * Class for the row view that has an optional icon and the checklist item.
+   * <p/>
+   * If the item is long, it will be truncated to fit in one line followed by ellipsis (...).
+   */
+  protected class RowWithIconView extends LinearLayout {
     
+    /** The associated context. */
+    protected Context context;
+    
+    /** The icon associated with the row (if any). */
+    protected ImageView icon;
+    
+    /** The text of the checklist item. */
+    protected TextView text;
+    
+    
+    /** Initializes the row view. */
     public RowWithIconView(Context context, int position) {
-      this(context);
+      super(context);
       this.setOrientation(HORIZONTAL);
       boolean isDone = "1".equals(cursor.getString(cursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_IS_DONE)));
       text = new TextView(context);
-      text.setText(cursor.getString(2));
+      text.setSingleLine();
+      text.setEllipsize(TruncateAt.END);
+      text.setText(cursor.getString(cursor.getColumnIndexOrThrow(ChecklistDBAdapter.KEY_ITEM)));
       text.setTextColor(Color.BLACK);
       text.setPadding(5, 5, 5, 5);
       text.setTextSize(15);
@@ -78,7 +99,7 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
               Color.parseColor("#D20D2A"), 
               Color.BLACK, 
           } 
-));
+      ));
       if(isDone) {
         icon = new ImageView(context);
         icon.setImageDrawable(getResources().getDrawable(R.drawable.done));
@@ -99,5 +120,5 @@ public class ChecklistItemAdapter extends SimpleCursorAdapter {
         this.setBackgroundColor(Color.WHITE);
       }
     }
-  }
+  } // RowWithIconView ENDS
 }
