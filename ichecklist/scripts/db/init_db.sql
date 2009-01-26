@@ -1,6 +1,6 @@
 BEGIN TRANSACTION;
-delete from checklist;
 delete from checklist_item;
+delete from checklist;
 INSERT INTO "checklist" VALUES(1,'Developing an Android app');
 INSERT INTO "checklist" VALUES(2,'Home loan documents');
 INSERT INTO "checklist" VALUES(3,'Travel checklist');
