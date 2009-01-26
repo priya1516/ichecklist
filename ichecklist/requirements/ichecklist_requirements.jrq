@@ -3,6 +3,11 @@
 <requirements>
 <info>
 <external-file-info>
+<project></project>
+<file></file>
+<file-type></file-type>
+<import-info>
+</import-info>
 </external-file-info>
 </info>
 <requirement>
@@ -39,7 +44,7 @@
 <target-release><![CDATA[1.0]]></target-release>
 <priority><![CDATA[3]]></priority>
 <must-have><![CDATA[Yes]]></must-have>
-<description><![CDATA[]]></description>
+<description><![CDATA[Should ask for confirmation before deleting.]]></description>
 <notes><![CDATA[]]></notes>
 <test-case-methods><![CDATA[]]></test-case-methods>
 <dependencies><![CDATA[]]></dependencies>
@@ -91,7 +96,20 @@
 <target-release><![CDATA[1.0]]></target-release>
 <priority><![CDATA[3]]></priority>
 <must-have><![CDATA[Yes]]></must-have>
-<description><![CDATA[]]></description>
+<description><![CDATA[Should ask for confirmation before deleting.]]></description>
+<notes><![CDATA[]]></notes>
+<test-case-methods><![CDATA[]]></test-case-methods>
+<dependencies><![CDATA[]]></dependencies>
+</requirement>
+<requirement>
+<id><![CDATA[1.8.1]]></id>
+<category><![CDATA[Checklist]]></category>
+<sub-category><![CDATA[]]></sub-category>
+<title><![CDATA[Duplicate a checklist item.]]></title>
+<target-release><![CDATA[1.0]]></target-release>
+<priority><![CDATA[3]]></priority>
+<must-have><![CDATA[Yes]]></must-have>
+<description><![CDATA[Whlie making a list item duplicate, clear off its done state.]]></description>
 <notes><![CDATA[]]></notes>
 <test-case-methods><![CDATA[]]></test-case-methods>
 <dependencies><![CDATA[]]></dependencies>

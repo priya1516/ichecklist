@@ -64,7 +64,6 @@ public class Checklist extends ListActivity {
   boolean isLicenseAccepted;  
   
 
-  /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -82,6 +81,14 @@ public class Checklist extends ListActivity {
     }
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    if (mDbHelper != null) {
+      mDbHelper.close();
+    }
+  }
+  
   /**
    * Shows the license.
    */
