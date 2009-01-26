@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical" android:layout_width="fill_parent"
+  android:background="@color/blue"
+  android:layout_height="fill_parent">
+  
+  <!-- Name -->
+  <LinearLayout android:orientation="horizontal"
+    android:layout_width="fill_parent"
+    android:background="@drawable/gray"
+     android:padding="2px"
+    android:layout_height="wrap_content">
+    <TextView android:layout_width="wrap_content"
+      android:layout_height="wrap_content" 
+      android:textColor="@color/black"
+      android:textSize="@dimen/sixteen_sp"
+      android:padding="@dimen/sixteen_sp"
+      android:text="@string/name" />
+    <EditText android:id="@+id/name" 
+      android:layout_width="fill_parent"
+      android:padding="5px"
+      android:textColor="@color/red"
+      android:textSize="15px"
+      android:maxLength="50"
+      android:singleLine="True"
+      android:layout_height="wrap_content"/> 
+  </LinearLayout>
+
+  <!-- Item headers -->
+  <!--TextView android:id="@+id/is_done_header"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="@string/is_done"/>
+  <TextView android:id="@+id/item_header"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:text="@string/item"/-->
+  
+  <!-- Items -->
+  <ListView android:id="@+id/items"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:padding="5px"
+    android:scrollbars="vertical"/>
+  <TextView android:id="@+id/no_items"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_weight="1"
+    android:text="@string/no_items"/>
+
+  <!-- Buttons -->  
+  <LinearLayout android:orientation="horizontal"
+    android:layout_centerHorizontal="true"
+    android:layout_gravity="center_horizontal"
+    android:padding="5px"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+    <ImageButton android:id="@+id/save"
+    android:src="@drawable/save"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+
+    <ImageButton android:id="@+id/cancel"
+    android:src="@drawable/cancel"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"/>
+      
+  </LinearLayout>
+</LinearLayout>

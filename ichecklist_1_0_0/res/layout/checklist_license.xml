@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+  android:layout_width="fill_parent"
+  android:layout_height="fill_parent"
+  android:background="@color/blue"
+  android:padding="5px"
+  android:orientation="vertical">
+  
+  <!-- License -->
+  <EditText android:id="@+id/license"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:typeface="normal"
+    android:layout_weight="1"
+    android:scrollbars="vertical"
+    android:editable="false"
+    android:text='iChecklist is licensed under the Apache License 2.0. For the complete license please visit http://technobuff.net/product/ichecklist/license. This software is distributed on an "AS IS" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. The publisher of software or any contributor cannot be held responsible for any damage or loss that you may suffer by the use or installation of this software. Use at your own risk.'/>
+  
+  <!-- Buttons -->
+  <LinearLayout
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+    <Button android:id="@+id/accept"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="10px"
+      android:layout_gravity="left"
+      android:text="@string/accept"/>
+    <Button android:id="@+id/reject"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:padding="10px"
+      android:layout_gravity="left"
+      android:text="@string/reject"/>
+  </LinearLayout>
+</LinearLayout>
+

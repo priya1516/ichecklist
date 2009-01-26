@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+  <!-- Labels -->
+  <string name="app_name">iChecklist</string>
+  <string name="name"><b>Name</b></string>
+  <string name="menu_add_checklist">Add List</string>
+  <string name="menu_copy_checklist">Copy List</string>
+  <string name="menu_delete_checklist">Delete List</string>
+  <string name="menu_add_item">Add Item</string>
+  <string name="menu_copy_item">Copy Item</string>
+  <string name="menu_delete_item">Delete Item</string>
+  <string name="items">Items</string>
+  <string name="item">Item</string>
+  <string name="is_done">Done?</string>
+  <string name="copy_prefix">Copy of</string>
+  <string name="accept">Accept</string>
+  <string name="reject">Reject</string>
+  <string name="save">Save</string>
+  <string name="cancel">Cancel</string>
+  
+  <!-- Messages -->
+  <string name="no_checklists">No checklists!</string>
+  <string name="no_items">No items in the checklist!</string>
+  <string name="confirm">Confirm</string>
+  <string name="confirm_delete">Are you sure you want to delete?</string>
+  <string name="yes">Yes</string>
+  <string name="no">No</string>
+</resources>
