@@ -23,6 +23,7 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.SimpleCursorAdapter;
@@ -34,19 +35,32 @@ import android.widget.TextView;
  * @author Kavita
  */
 public class ChecklistAdapter extends SimpleCursorAdapter {
-  private TextView text;
-  private Context context;
-  private Cursor cursor;
+  
+  /** The associated context. */
+  protected Context context;
+  
+  /** The cursor associated with the checklists. */
+  protected Cursor cursor;
+  
+  /** The view associated with the checklist name. */
+  protected TextView text;
 
-  public ChecklistAdapter(Activity context, int task_row, Cursor tasks2, String[] from, int[] to) { 
-    super(context , task_row,tasks2, from, to); 
+  
+  /**
+   * Initializes the adapter.
+   */
+  public ChecklistAdapter(Activity context, int taskRow, Cursor cursor, String[] from, int[] to) { 
+    super(context, taskRow, cursor, from, to); 
     this.cursor = cursor;
     this.context = context;
   } 
 
+  @Override
   public View getView(int position, View convertView, ViewGroup parent) { 
     View row = super.getView(position, convertView, parent); 
     TextView text = (TextView)row.findViewById(R.id.checklist_name_text);
+    text.setSingleLine();
+    text.setEllipsize(TruncateAt.END);
     text.setTextColor(new ColorStateList(
         new int[][] { 
             new int[] { android.R.attr.state_selected}, 
@@ -57,7 +71,7 @@ public class ChecklistAdapter extends SimpleCursorAdapter {
         } 
     ));    
     if(position % 2 == 0) {
-      row.setBackgroundColor (Color.rgb(170, 172, 240) ); 
+      row.setBackgroundColor(Color.rgb(170, 172, 240) ); 
     } 
     else {
       row.setBackgroundColor(Color.WHITE);
