@@ -147,8 +147,8 @@ public class ChecklistDBAdapter {
   }
   
   /**
-   * Creates a copy of the supplied checklist. The copy begins with "Copy of " source list name.
-   * All the items in the newly created list are set to not done.
+   * Creates a copy of the supplied checklist. All the items in the newly created list
+   * are set to not done.
    * 
    * @param listId The source checklist id.
    * 
@@ -163,8 +163,9 @@ public class ChecklistDBAdapter {
     String item;
     
     try {
+      String copyPrefix = mCtx.getString(R.string.copy_prefix);
       checklistCursor = fetchChecklist(listId);
-      name = "Copy of " + checklistCursor.getString(checklistCursor.getColumnIndexOrThrow(KEY_NAME));
+      name = copyPrefix + " " + checklistCursor.getString(checklistCursor.getColumnIndexOrThrow(KEY_NAME));
       id = createChecklist(name);
       checklistItemsCursor = fetchChecklistItems(listId);
       n = checklistItemsCursor.getCount();
@@ -303,8 +304,9 @@ public class ChecklistDBAdapter {
     Cursor checklistItemCursor = null;
     
     try {
+      String copyPrefix = mCtx.getString(R.string.copy_prefix);
       checklistItemCursor = fetchChecklistItem(itemId);
-      name = "Copy of " + checklistItemCursor.getString(checklistItemCursor.getColumnIndexOrThrow(KEY_ITEM));
+      name = copyPrefix + " " + checklistItemCursor.getString(checklistItemCursor.getColumnIndexOrThrow(KEY_ITEM));
       listId = checklistItemCursor.getLong(checklistItemCursor.getColumnIndexOrThrow(KEY_LIST_ID));
       if (checklistItemCursor != null) {
           newItemId = createChecklistItem(listId, name, false);

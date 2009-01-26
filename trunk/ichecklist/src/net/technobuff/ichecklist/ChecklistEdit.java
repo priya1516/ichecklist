@@ -80,7 +80,6 @@ public class ChecklistEdit extends Activity {
   protected boolean isCancelled;
 
 
-  /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -128,6 +127,13 @@ public class ChecklistEdit extends Activity {
     });
   }
 
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    if (mDbHelper != null) {
+      mDbHelper.close();
+    }
+  }
   
   /**
    * Populates the fields with the data.
@@ -252,9 +258,14 @@ public class ChecklistEdit extends Activity {
    * Creates a checklist item.
    */
   protected void createChecklistItem() {
-    Intent intent = new Intent(this, ChecklistItemEdit.class);
-    intent.putExtra(ChecklistDBAdapter.KEY_LIST_ID, mListRowId);
-    startActivityForResult(intent, ACTIVITY_CREATE);
+    if (mListRowId != null) {
+      Intent intent = new Intent(this, ChecklistItemEdit.class);
+      intent.putExtra(ChecklistDBAdapter.KEY_LIST_ID, mListRowId);
+      startActivityForResult(intent, ACTIVITY_CREATE);
+    }
+    else {
+      Log.e(TAG, "Trying to add item to non-existing checklist.");
+    }
   }
   
   /**

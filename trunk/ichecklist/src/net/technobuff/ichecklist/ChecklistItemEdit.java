@@ -62,7 +62,6 @@ public class ChecklistItemEdit extends Activity {
   protected boolean isCancelled;
   
 
-  /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState) {
     super.onCreate(savedInstanceState);
@@ -106,6 +105,14 @@ public class ChecklistItemEdit extends Activity {
         finish();
       }
     });
+  }
+
+  @Override
+  protected void onDestroy() {
+    super.onDestroy();
+    if (mDbHelper != null) {
+      mDbHelper.close();
+    }
   }
 
   /**
